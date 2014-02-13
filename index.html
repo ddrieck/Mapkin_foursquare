@@ -31,16 +31,8 @@
     <!-- <script src="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.js"></script> -->
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <script type="text/javascript" src="https://api.tiles.mapbox.com/mapbox.js/v1.6.1/mapbox.standalone.js"></script>
-    <script type="text/javascript" src="js/scripts.js"></script>
-    <script type="text/javascript">
-      $(document).ready(function() {
-        // Set up the map
-        var leafletMap = new L.Map("themap", {maxZoom: 18});
-        var bgLayer = L.mapbox.tileLayer('mapkin.h8d8ccmd', { detectRetina: true });
-        leafletMap.addLayer(bgLayer);
-        leafletMap.setView([38.902, -77.001], 13);
-      });
-    </script>
+    <script type="text/javascript" src="js/map_interaction.js"></script>
+    <script type="text/javascript" src="js/foursquare_query.js"></script>
   </head>
   <body>
     <div class="sidebar"> </div>
