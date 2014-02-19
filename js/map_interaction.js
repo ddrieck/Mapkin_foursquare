@@ -24,15 +24,20 @@ $(document).ready(function() {
             var coordinates = e.latlng.lat + "," + e.latlng.lng;
 
             myFoursquareService.query(null, function(venues){
-                console.log(typeof(venues[0].lat + venues[0].lng));
-                    venueLayer.addLayer(new L.Marker(
-                        new L.LatLng(coordinates), 
-                        { icon: new L.Icon({ iconUrl: 'https://dev.mapkin.co/resources/poi/cat-icon-generic.24.24',     iconSize: [24, 24], iconAnchor: [12, 12]}),
-                          clickable: true,
-                          draggable: false }));
+                for (var i = 0; i < venues.length; i++) {
+                        $(".sidebar").append('<div class="venue_item">' + venues[i].name + '<br>' + venues[i].address + '</div>');
+                    };
                 }, coordinates);
             };
 
         leafletMap.on('click', onMapClick);
+
+
+
+/*        venueLayer.addLayer(new L.Marker(
+            new L.LatLng(venues[i].lat,venues[i].lng), 
+                { icon: new L.Icon({ iconUrl: 'https://dev.mapkin.co/resources/poi/cat-icon-generic.24.24',     iconSize: [24, 24], iconAnchor: [12, 12]}),
+                          clickable: true,
+                          draggable: false }));*/
 
 });

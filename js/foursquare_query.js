@@ -3,11 +3,12 @@ var FoursquareService = function(clientId, clientSecret) {
 
     // 'class' representing a single venue
     var Venue = function(rawVenue) {
+        var location = rawVenue.location;
         this.id = rawVenue.id; // Unique ID, comes from Foursquare
         this.name = rawVenue.name;
-        this.location = rawVenue.location.lat + ", " + rawVenue.location.lng;
-        this.lat = rawVenue.location.lat;
-        this.lng = rawVenue.location.lng;
+        this.address = location.address + " " + location.city + ", " + location.state + " " + location.postalCode;
+        this.lat = location.lat;
+        this.lng = location.lng;
         this.category = rawVenue.categories[0].name; // restaurant, airport, cafe, grocery store, etc
     };
 
@@ -32,8 +33,8 @@ var FoursquareService = function(clientId, clientSecret) {
         // The filter should specify bounding box, search string, and/or categories
         // Optionally, this function could
         $.getJSON(foursquareURL, function(result) {
+            console.log(result);
             var collection = new VenueCollection(result.response.venues);
-
             collection.venues = $.map(
                 result.response.venues,
                 function(venue) { 
