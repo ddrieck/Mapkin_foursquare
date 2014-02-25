@@ -1,6 +1,7 @@
 // Main 'class'
 var FoursquareService = function(clientId, clientSecret) {
     this.collection;
+    this.catCollection;
     //set this scope for inside the getJSON function
     var self = this;
 
@@ -27,6 +28,35 @@ var FoursquareService = function(clientId, clientSecret) {
 
     };
 
+    var Category = function(rawCategory){
+        console.log(rawCategory);
+        this.icon = rawCategory.icon.prefix + "bg_44" + rawCategory.icon.suffix;
+        for (var i = 0; i < rawCategory.categories.length; i++) {
+            var subCategories = rawCategory.categories[i];
+            this.id = subCategories.id;
+            this.name = subCategories.name;
+            console.log(subCategories.name);
+        };
+    };
+
+    var CategoryCollection = function(categories){
+        this.categories = categories;
+    };
+
+    this.categories = function(callback){
+        var foursquareCatURL = "https://api.foursquare.com/v2/venues/categories?v=20140221&client_id=" + clientId + "&client_secret=" + clientSecret;
+
+        $.getJSON(foursquareCatURL, function(result) {
+                    self.catCollection =  new CategoryCollection(result.response);
+                    self.catCollection.categories = $.map(
+                        result.response.categories,
+                        function(categories) { 
+                            return new Category(categories);
+                        }
+                    );  
+                    
+            });
+    };
 
     // API of the Foursquare class
     this.query = function(radius, callback, coordinates) {
