@@ -12,6 +12,12 @@ $(document).ready(function() {
 
         var myFoursquareService = new FoursquareService('HOM3GU3LXDBNRKWNYCEOXF4EC4SZJZCJBQMMIW1YG3ZADX4S', '2XJKEM3JYIQMJLGAYI4AUIU4ZWYYUUELMOZ2HKJN1M3CIVFH');
 
+        myFoursquareService.categories(function(cats){
+            for (var i = 0; i < cats.length; i++) {
+                console.log(cats[i]);
+            };
+        });
+
         function onMapClick(e) {
             venueLayer.clearLayers();
             //Popup from leaflet tutorial. Using as a marker for testing
@@ -48,17 +54,15 @@ $(document).ready(function() {
             return (d * 1000); // meters
             }
 
-            console.log(distance);
-
-            myFoursquareService.query(distance, function(venues){
-                $(".sidebar").empty();
-                for (var i = 0; i < venues.length; i++) {
+        myFoursquareService.query(distance, function(venues){
+            $(".sidebar").empty();
+            for (var i = 0; i < venues.length; i++) {
                         $(".sidebar").append('<div class="venue_item" data-id="' + venues[i].id + '">' + venues[i].name + '<br>' + venues[i].address + '</div>');
-                    };
+                };
 
-                }, coordinates); //End query method
+            }, coordinates); //End query method
 
-            }; //End function
+        }; //End function
 
         leafletMap.on('click', onMapClick);
 
