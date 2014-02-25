@@ -28,24 +28,28 @@ var FoursquareService = function(clientId, clientSecret) {
 
     };
 
+    // category 'class' for processing class data
     var Category = function(rawCategory){
-        console.log(rawCategory);
-        this.icon = rawCategory.icon.prefix + "bg_44" + rawCategory.icon.suffix;
+        //Loop through the subcategories (they are arrays) and process the information we need into objects
         for (var i = 0; i < rawCategory.categories.length; i++) {
             var subCategories = rawCategory.categories[i];
+            this.icon = subCategories.icon.prefix + "bg_44" + subCategories.icon.suffix;
             this.id = subCategories.id;
             this.name = subCategories.name;
-            console.log(subCategories.name);
         };
     };
 
+    //categories in the class. Still not sure if this will be useful for future filtering. Figure it out during review. Can probably remove
     var CategoryCollection = function(categories){
         this.categories = categories;
     };
 
+    //Query to process the categories and map the results to the Category class above
     this.categories = function(callback){
+        //The foursquare query to access the categories API
         var foursquareCatURL = "https://api.foursquare.com/v2/venues/categories?v=20140221&client_id=" + clientId + "&client_secret=" + clientSecret;
 
+        //Process the json results to a new collection instance and map the categories array to our categories class.
         $.getJSON(foursquareCatURL, function(result) {
                     self.catCollection =  new CategoryCollection(result.response);
                     self.catCollection.categories = $.map(
@@ -54,7 +58,8 @@ var FoursquareService = function(clientId, clientSecret) {
                             return new Category(categories);
                         }
                     );  
-                    
+                
+                callback(self.Category);
             });
     };
 
