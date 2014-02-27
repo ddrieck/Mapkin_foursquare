@@ -32,16 +32,21 @@ var FoursquareService = function(clientId, clientSecret) {
     var Category = function(rawCategory){
         //Loop through the subcategories (they are arrays) and process the information we need into objects
         for (var i = 0; i < rawCategory.categories.length; i++) {
-            var subCategories = rawCategory.categories[i];
-            this.icon = subCategories.icon.prefix + "bg_44" + subCategories.icon.suffix;
+            var subCategories = rawCategory.categories[i]; //Every parent category has a subcategory which we assign to here
+            this.icon = subCategories.icon.prefix + "bg_44" + subCategories.icon.suffix; //create the URL to access the image. Going with a standard 44px square image. Size can be changed.
             this.id = subCategories.id;
             this.name = subCategories.name;
         };
+
     };
 
     //categories in the class. Still not sure if this will be useful for future filtering. Figure it out during review. Can probably remove
     var CategoryCollection = function(categories){
+        for (var i = 0; i < categories.length; i++) {
+            this.categories += categories[i]
+            };
         this.categories = categories;
+        return categories;
     };
 
     //Query to process the categories and map the results to the Category class above
@@ -54,12 +59,14 @@ var FoursquareService = function(clientId, clientSecret) {
                     self.catCollection =  new CategoryCollection(result.response);
                     self.catCollection.categories = $.map(
                         result.response.categories,
-                        function(categories) { 
+                        function(categories) {
+                        //This is my hacknied way of getting the categories to be processed asynchronously. Probably a better way to right this. 
+                            callback(categories);
+                            //Even with async hack above you need to run this Category class processor
                             return new Category(categories);
                         }
-                    );  
-                
-                callback(self.Category);
+                    ); 
+
             });
     };
 
