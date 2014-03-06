@@ -57,13 +57,13 @@ var FoursquareService = function(clientId, clientSecret) {
         //Process the json results to a new collection instance and map the categories array to our categories class.
         $.getJSON(foursquareCatURL, function(result) {
                     self.catCollection =  new CategoryCollection(result.response);
+                    //This is my hacknied way of getting the categories to be processed asynchronously. Probably a better way to write this. 
+                            callback({categories: result.response.categories});
                     self.catCollection.categories = $.map(
                         result.response.categories,
-                        function(categories) {
-                        //This is my hacknied way of getting the categories to be processed asynchronously. Probably a better way to right this. 
-                            callback(categories);
+                        function(category) {
                             //Even with async hack above you need to run this Category class processor
-                            return new Category(categories);
+                            return new Category(category);
                         }
                     ); 
 
