@@ -57,7 +57,7 @@ var FoursquareService = function(clientId, clientSecret) {
         //Process the json results to a new collection instance and map the categories array to our categories class.
         $.getJSON(foursquareCatURL, function(result) {
                     self.catCollection =  new CategoryCollection(result.response);
-                    //This is my hacknied way of getting the categories to be processed asynchronously. Probably a better way to write this. 
+                    //This is my hacknied way of getting the categories to be processed asynchronously. Probably a better way to writ e this. 
                             callback({categories: result.response.categories});
                     self.catCollection.categories = $.map(
                         result.response.categories,
@@ -71,9 +71,8 @@ var FoursquareService = function(clientId, clientSecret) {
     };
 
     // API of the Foursquare class
-    this.query = function(radius, callback, coordinates) {
-        var foursquareURL = "https://api.foursquare.com/v2/venues/search?ll=" + coordinates + "&intent=browse&radius=" + radius + "&sortByDistance=1&limit=100&v=20132805&client_id=" + clientId + "&client_secret=" + clientSecret;
-
+    this.query = function(radius, callback, coordinates, category) {
+        var foursquareURL = "https://api.foursquare.com/v2/venues/search?ll=" + coordinates + "&intent=browse&categoryId=" + category + "&radius=" + radius + "&sortByDistance=1&limit=500&v=20132805&client_id=" + clientId + "&client_secret=" + clientSecret;
         // Query foursquare using the filter, call callback with the VenueCollection
         // The filter should specify bounding box, search string, and/or categories
         // Optionally, this function could
