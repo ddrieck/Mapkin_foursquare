@@ -102,17 +102,60 @@ $(document).ready(function() {
 
             venueLayer.clearLayers();
 
-        console.log(distance);
-        
         myFoursquareService.query(distance, function(venues){
             $(".sidebar").empty();
             for (var i = 0; i < venues.length; i++) {
-                $(".sidebar").show().append('<div class="venue_item" data-id="' + venues[i].id + '">' + venues[i].name + '<br>' + venues[i].address + '</div>');
-                };
-            }, coordinates, $(this).closest(".category_item").data("id"));
-    }; 
+                $(".sidebar").show().append('<div class="venue_item venue_item_' + (i+1) + '" data-id="' + venues[i].id + '">' + venues[i].name + '<br>' + venues[i].address + '<br><a href="#" class="pin_click">Add to Map</a></div>');
+                    };
+            //Write pagination controls at bottom of sidebar
+            $(".sidebar").append('<div id="pagination"><a href="#" class="first" data-action="first">&laquo;</a><a href="#" class="previous" data-action="previous">&lsaquo;</a><input type="text" readonly="readonly" data-max-page="40" /><a href="#" class="next" data-action="next">&rsaquo;</a><a href="#" class="last" data-action="last">&raquo;</a></div>');
 
-    /**/ //End query method
+            //Function to create pagination functionality
+            function pagination(recordsPerPage, totalNumRecords){
+                //loop through all of the divs and hide them by default.
+                for (var i=1; i <= totalNumRecords; i++) {
+                        $(".sidebar").find(".venue_item_" + i).hide();
+                    }
+
+                //then only display the number of divs the user dictated
+                for (var i = 1; i <= recordsPerPage; i++) {
+                    $(".sidebar").find(".venue_item_" + i).show();
+                }
+
+                //maxPages is the maximum amount of pages needed for pagination. (round up) 
+                var maxPages = Math.ceil(totalNumRecords/recordsPerPage);   
+
+                $('#pagination').jqPagination({
+                    link_string : '/?page={page_number}',
+                    max_page     : maxPages,
+                    paged        : function(page) { 
+
+                        //a new page has been requested
+
+                        //loop through all of the divs and hide them all.
+                        for (var i=1; i <= totalNumRecords; i++) {
+                            $(".sidebar").find(".venue_item_" + i).hide();
+                        }
+
+                        //Find the range of the records for the page: 
+                        var recordsFrom = recordsPerPage * (page-1) + 1;
+                        var recordsTo = recordsPerPage * (page);
+
+                        //then display only the records on the specified page
+                        for (var i = recordsFrom; i <= recordsTo; i++) {
+                            $(".sidebar").find(".venue_item_" + i).show();
+                        }      
+
+                        //scroll to the top of the page if the page is changed
+                        $("html, body").animate({ scrollTop: 0 }, "slow");
+                            }
+                        }); //End of jqpagination call
+                    } //End of pagination function
+
+                pagination(10, venues.length);
+        }, coordinates, $(this).closest(".category_item").data("id")); //End of 4sq query
+
+    }; //End categoryClick method
 
     leafletMap.on('click', onMapClick);
 
@@ -120,10 +163,10 @@ $(document).ready(function() {
 
     var pin_populate = function(){
        var collection = myFoursquareService.collection.venues;
-       var dataTag = $(this).data("id");
+       var dataTag = $(this).parent().data("id");
        for (var i = 0; i < collection.length; i++) {
             if (collection[i].id === dataTag){         venueLayer.addLayer(new L.Marker(new L.LatLng(collection[i].lat,collection[i].lng), 
-                { icon: new L.Icon({ iconUrl: 'https://dev.mapkin.co/resources/poi/cat-icon-generic.24.24',     iconSize: [24, 24], iconAnchor: [12, 12]}),
+                { icon: new L.Icon({ iconUrl: /*collection[i].icon*/'https://dev.mapkin.co/resources/poi/cat-icon-generic.24.24',     iconSize: [24, 24], iconAnchor: [12, 12]}),
                       clickable: true,
                       draggable: false }));
                 };
@@ -131,6 +174,6 @@ $(document).ready(function() {
 
     };
 
-    $(".sidebar").on("click", ".venue_item", pin_populate);
+    $(".sidebar").on("click", ".pin_click", pin_populate);
 
 });
