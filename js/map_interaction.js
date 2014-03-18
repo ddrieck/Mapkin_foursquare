@@ -2,9 +2,12 @@ $(document).ready(function() {
     // Set up the map
     var leafletMap = new L.Map("themap", {maxZoom: 18});
     var venueLayer = new L.LayerGroup();
+    var markerLayer = new L.LayerGroup();
     var bgLayer = L.mapbox.tileLayer('mapkin.h8d8ccmd', { detectRetina: true });
     leafletMap.addLayer(bgLayer);
     leafletMap.addLayer(venueLayer);
+    leafletMap.addLayer(markerLayer);
+
     //Center the map on Boston
     leafletMap.setView([42.350463, -71.058983], 13);
 
@@ -18,19 +21,18 @@ $(document).ready(function() {
             $(".top-bar").empty().hide();
         }
 
-        destIcon = L.icon({
-            iconUrl: 'https://dev.mapkin.co/static/images/RouteMarkerEnd.png',
-            iconRetinaUrl: 'https://dev.mapkin.co/static/images/RouteMarkerEnd.png'
-            });
 
-        //Popup from leaflet tutorial. Using as a marker for testing
-        L.marker([],{icon: destIcon}).setLatLng(e.latlng).update();
+        $(".topbar-modified").removeClass("topbar-modified").addClass("topbar");
 
-        /*popup
-            .setLatLng(e.latlng)
-            .setContent("You clicked the map at " + e.latlng.toString())
-            .openOn(leafletMap);
-*/
+        markerLayer.clearLayers();
+        venueLayer.clearLayers();
+
+        markerLayer.addLayer(new L.Marker(new L.LatLng(e.latlng.lat,e.latlng.lng), 
+                { icon: new L.Icon({ iconUrl: 'https://dev.mapkin.co/static/images/RouteMarkerEnd.png'}),
+                      clickable: false,
+                      draggable: false }));
+                
+
         //Declare an empty variable to use for our object
         var catHash;
 
@@ -105,7 +107,7 @@ $(document).ready(function() {
             var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
             var d = R * c;
             return (d * 1000); // meters
-            }
+            }  //End measure function
 
             venueLayer.clearLayers();
 
@@ -161,7 +163,8 @@ $(document).ready(function() {
 
                 pagination(10, venues.length);
         }, coordinates, $(this).closest(".category_item").data("id")); //End of 4sq query
-
+    
+    $(".topbar").removeClass("topbar").addClass("topbar-modified");
     }; //End categoryClick method
 
     leafletMap.on('click', onMapClick);
