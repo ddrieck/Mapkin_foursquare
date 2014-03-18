@@ -32,6 +32,18 @@ html, body {
     background-color: rgba(241, 241, 241, .3);
   }
 
+.topbar-modified {
+    position: fixed;
+    display: none;
+    margin-top: 6%;
+    height: 50px;
+    width: 21%;
+    margin-right: 5%;
+    padding-right: 1%;
+    z-index: 5;
+    background-color: rgba(241, 241, 241, .8);
+}
+
 .content {
     position: absolute;
     left: 0px;
