@@ -18,12 +18,19 @@ $(document).ready(function() {
             $(".top-bar").empty().hide();
         }
 
+        destIcon = L.icon({
+            iconUrl: 'https://dev.mapkin.co/static/images/RouteMarkerEnd.png',
+            iconRetinaUrl: 'https://dev.mapkin.co/static/images/RouteMarkerEnd.png'
+            });
+
         //Popup from leaflet tutorial. Using as a marker for testing
-        popup
+        L.marker([],{icon: destIcon}).setLatLng(e.latlng).update();
+
+        /*popup
             .setLatLng(e.latlng)
             .setContent("You clicked the map at " + e.latlng.toString())
             .openOn(leafletMap);
-
+*/
         //Declare an empty variable to use for our object
         var catHash;
 

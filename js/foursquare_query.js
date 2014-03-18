@@ -12,8 +12,9 @@ var FoursquareService = function(clientId, clientSecret) {
         this.name = rawVenue.name;
         this.address = location.address + " " + location.city + ", " + location.state + " " + location.postalCode;
         this.lat = location.lat;
-        this.lng = location.lng;/*
-        this.category = rawVenue.categories[0].name; // restaurant, airport, cafe, grocery store, etc*/
+        this.lng = location.lng;
+        var category = rawVenue.categories[0];
+        this.icon = category.icon.prefix + "bg_32" + category.icon.suffix;
     };
 
 
