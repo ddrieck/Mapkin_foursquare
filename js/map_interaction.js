@@ -119,6 +119,8 @@ $(document).ready(function() {
             //Write pagination controls at bottom of sidebar
             $(".sidebar").append('<div id="pagination"><a href="#" class="first" data-action="first">&laquo;</a><a href="#" class="previous" data-action="previous">&lsaquo;</a><input type="text" readonly="readonly" data-max-page="40" /><a href="#" class="next" data-action="next">&rsaquo;</a><a href="#" class="last" data-action="last">&raquo;</a></div>');
 
+            circle_populate();
+
             //Function to create pagination functionality
             function pagination(recordsPerPage, totalNumRecords){
                 //loop through all of the divs and hide them by default.
@@ -130,6 +132,7 @@ $(document).ready(function() {
                 for (var i = 1; i <= recordsPerPage; i++) {
                     $(".sidebar").find(".venue_item_" + i).show();
                 }
+
 
                 //maxPages is the maximum amount of pages needed for pagination. (round up) 
                 var maxPages = Math.ceil(totalNumRecords/recordsPerPage);   
@@ -155,8 +158,11 @@ $(document).ready(function() {
                             $(".sidebar").find(".venue_item_" + i).show();
                         }      
 
+                        circle_populate(page);
+
                         //scroll to the top of the page if the page is changed
                         $("html, body").animate({ scrollTop: 0 }, "slow");
+
                             }
                         }); //End of jqpagination call
                     } //End of pagination function
@@ -183,6 +189,31 @@ $(document).ready(function() {
             };
 
     };
+
+    var circle_populate = function(page){
+        venueLayer.clearLayers();
+        console.log(page);
+        //This probably needs to be a function
+        for (var k = 0; k <= 50; k++){
+            var collection = myFoursquareService.collection.venues;
+            var dataTag = $(".venue_item_" + k).data("id");
+            for (var i = 0; i < collection.length; i++) {
+                if (collection[i].id === dataTag){
+                    if (page === undefined){
+                        if( i <= 10){
+                            venueLayer.addLayer(new L.Circle(new L.LatLng(collection[i].lat,collection[i].lng), 10, {color: "red"}));
+                        } else if ( i > 10){
+                            venueLayer.addLayer(new L.Circle(new L.LatLng(collection[i].lat,collection[i].lng), 10, {color: "blue"}));
+                        }
+                    } else if (($(".venue_item_" + k).is(":visible")) && (page > 1)){
+                         venueLayer.addLayer(new L.Circle(new L.LatLng(collection[i].lat,collection[i].lng), 10, {color: "red"}));
+                } else {
+                 venueLayer.addLayer(new L.Circle(new L.LatLng(collection[i].lat,collection[i].lng), 10, {color: "blue"}));
+                    }; 
+                };
+            };
+        };
+    }
 
     $(".sidebar").on("click", ".pin_click", pin_populate);
 
