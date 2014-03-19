@@ -192,7 +192,6 @@ $(document).ready(function() {
 
     var circle_populate = function(page){
         venueLayer.clearLayers();
-        console.log(page);
         //This probably needs to be a function
         for (var k = 0; k <= 50; k++){
             var collection = myFoursquareService.collection.venues;
