@@ -3,10 +3,12 @@ $(document).ready(function() {
     var leafletMap = new L.Map("themap", {maxZoom: 18});
     var venueLayer = new L.LayerGroup();
     var markerLayer = new L.LayerGroup();
+    var pinLayer = new L.LayerGroup();
     var bgLayer = L.mapbox.tileLayer('mapkin.h8d8ccmd', { detectRetina: true });
     leafletMap.addLayer(bgLayer);
     leafletMap.addLayer(venueLayer);
     leafletMap.addLayer(markerLayer);
+    leafletMap.addLayer(pinLayer);
 
     //Center the map on Boston
     leafletMap.setView([42.350463, -71.058983], 13);
@@ -113,6 +115,7 @@ $(document).ready(function() {
 
         myFoursquareService.query(distance, function(venues){
             $(".sidebar").empty();
+            //Create sidebar divs 
             for (var i = 0; i < venues.length; i++) {
                 $(".sidebar").show().append('<div class="venue_item venue_item_' + (i+1) + '" data-id="' + venues[i].id + '">' +'<span class="venue_number">' + (i+1) + '</span>' +  venues[i].name + '<br>' + venues[i].address + '<br><a href="#" class="pin_click">Add to Map</a></div>');
                     };
@@ -181,22 +184,27 @@ $(document).ready(function() {
        var collection = myFoursquareService.collection.venues;
        var dataTag = $(this).parent().data("id");
        for (var i = 0; i < collection.length; i++) {
-            if (collection[i].id === dataTag){         venueLayer.addLayer(new L.Marker(new L.LatLng(collection[i].lat,collection[i].lng), 
+            if (collection[i].id === dataTag){
+                pinLayer.addLayer(new L.Marker(new L.LatLng(collection[i].lat,collection[i].lng), 
                 { icon: new L.Icon({ iconUrl: /*collection[i].icon*/'https://dev.mapkin.co/resources/poi/cat-icon-generic.24.24',     iconSize: [24, 24], iconAnchor: [12, 12]}),
                       clickable: true,
                       draggable: false }));
+                //Change the data tag of pinned items so that the icons don't rewrite above it
+                $(this).parent().data("id", "PINNED");
                 };
             };
 
     };
 
+    //Circle populate will write circles for the return 4sq entries. The enteries location on the sidebar are red with numbers. Other enteries are blue with no numbers.
     var circle_populate = function(page){
         venueLayer.clearLayers();
-        //This probably needs to be a function
+        //We know we are going to have a maximum of 50 so cycle through 50 enteries
         for (var k = 0; k <= 50; k++){
             var collection = myFoursquareService.collection.venues;
             var dataTag = $(".venue_item_" + k).data("id");
             for (var i = 0; i < collection.length; i++) {
+                //Create a class for our red markers
                 var venue_circle = new L.divIcon({
                     className: 'venue-circle',
                     html: (i + 1),
@@ -204,11 +212,13 @@ $(document).ready(function() {
                 var LatLngCoord = new L.LatLng(collection[i].lat,collection[i].lng);
                 if (collection[i].id === dataTag){
                     if (page === undefined){
+                        //For the first 10 enteries on first click we need this if statement otherwise nothing will appear
                         if( i < 10){
                             venueLayer.addLayer(new L.Marker(LatLngCoord, {icon: venue_circle}));
                         } else if ( i > 10){
                             venueLayer.addLayer(new L.Circle(new L.LatLng(collection[i].lat,collection[i].lng), 15, {color: "blue"}));
                         }
+                        //Otherwise cycle through venues that are or are not visible of the sidebar.
                     } else if (($(".venue_item_" + k).is(":visible")) && (page > 0)){
                          venueLayer.addLayer(new L.Marker(LatLngCoord, {icon: venue_circle}));
                 } else {
