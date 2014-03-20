@@ -197,17 +197,22 @@ $(document).ready(function() {
             var collection = myFoursquareService.collection.venues;
             var dataTag = $(".venue_item_" + k).data("id");
             for (var i = 0; i < collection.length; i++) {
+                var venue_circle = new L.divIcon({
+                    className: 'venue-circle',
+                    html: (i + 1),
+                    iconSize: [20, 20]});
+                var LatLngCoord = new L.LatLng(collection[i].lat,collection[i].lng);
                 if (collection[i].id === dataTag){
                     if (page === undefined){
-                        if( i <= 10){
-                            venueLayer.addLayer(new L.Circle(new L.LatLng(collection[i].lat,collection[i].lng), 10, {color: "red"}));
+                        if( i < 10){
+                            venueLayer.addLayer(new L.Marker(LatLngCoord, {icon: venue_circle}));
                         } else if ( i > 10){
-                            venueLayer.addLayer(new L.Circle(new L.LatLng(collection[i].lat,collection[i].lng), 10, {color: "blue"}));
+                            venueLayer.addLayer(new L.Circle(new L.LatLng(collection[i].lat,collection[i].lng), 15, {color: "blue"}));
                         }
-                    } else if (($(".venue_item_" + k).is(":visible")) && (page > 1)){
-                         venueLayer.addLayer(new L.Circle(new L.LatLng(collection[i].lat,collection[i].lng), 10, {color: "red"}));
+                    } else if (($(".venue_item_" + k).is(":visible")) && (page > 0)){
+                         venueLayer.addLayer(new L.Marker(LatLngCoord, {icon: venue_circle}));
                 } else {
-                 venueLayer.addLayer(new L.Circle(new L.LatLng(collection[i].lat,collection[i].lng), 10, {color: "blue"}));
+                 venueLayer.addLayer(new L.Circle(new L.LatLng(collection[i].lat,collection[i].lng), 15, {color: "blue"}));
                     }; 
                 };
             };
