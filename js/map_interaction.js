@@ -114,7 +114,7 @@ $(document).ready(function() {
         myFoursquareService.query(distance, function(venues){
             $(".sidebar").empty();
             for (var i = 0; i < venues.length; i++) {
-                $(".sidebar").show().append('<div class="venue_item venue_item_' + (i+1) + '" data-id="' + venues[i].id + '">' + venues[i].name + '<br>' + venues[i].address + '<br><a href="#" class="pin_click">Add to Map</a></div>');
+                $(".sidebar").show().append('<div class="venue_item venue_item_' + (i+1) + '" data-id="' + venues[i].id + '">' +'<span class="venue_number">' + (i+1) + '</span>' +  venues[i].name + '<br>' + venues[i].address + '<br><a href="#" class="pin_click">Add to Map</a></div>');
                     };
             //Write pagination controls at bottom of sidebar
             $(".sidebar").append('<div id="pagination"><a href="#" class="first" data-action="first">&laquo;</a><a href="#" class="previous" data-action="previous">&lsaquo;</a><input type="text" readonly="readonly" data-max-page="40" /><a href="#" class="next" data-action="next">&rsaquo;</a><a href="#" class="last" data-action="last">&raquo;</a></div>');
