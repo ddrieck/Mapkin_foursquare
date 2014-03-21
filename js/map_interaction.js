@@ -185,6 +185,7 @@ $(document).ready(function() {
        var dataTag = $(this).parent().data("id");
        for (var i = 0; i < collection.length; i++) {
             if (collection[i].id === dataTag){
+                leafletMap.setView((new L.LatLng(collection[i].lat,collection[i].lng)));
                 pinLayer.addLayer(new L.Marker(new L.LatLng(collection[i].lat,collection[i].lng), 
                 { icon: new L.Icon({ iconUrl: /*collection[i].icon*/'https://dev.mapkin.co/resources/poi/cat-icon-generic.24.24',     iconSize: [24, 24], iconAnchor: [12, 12]}),
                       clickable: true,
@@ -217,13 +218,13 @@ $(document).ready(function() {
                         if( i < 10){
                             venueLayer.addLayer(new L.Marker(LatLngCoord, {icon: venue_circle}).bindPopup(popupContent).openPopup());
                         } else if ( i > 10){
-                            venueLayer.addLayer(new L.Circle(new L.LatLng(collection[i].lat,collection[i].lng), 15, {color: "blue"}).bindPopup(popupContent).openPopup());
+                            venueLayer.addLayer(new L.Circle(new L.LatLng(collection[i].lat,collection[i].lng), 15, {color: "blue"}));
                         }
                         //Otherwise cycle through venues that are or are not visible of the sidebar.
                     } else if (($(".venue_item_" + k).is(":visible")) && (page > 0)){
                          venueLayer.addLayer(new L.Marker(LatLngCoord, {icon: venue_circle}).bindPopup(popupContent).openPopup());
                 } else {
-                 venueLayer.addLayer(new L.Circle(new L.LatLng(collection[i].lat,collection[i].lng), 15, {color: "blue"}).bindPopup(popupContent).openPopup());
+                 venueLayer.addLayer(new L.Circle(new L.LatLng(collection[i].lat,collection[i].lng), 15, {color: "blue"}));
                     }; 
                 };
             };
