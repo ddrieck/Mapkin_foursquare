@@ -204,6 +204,7 @@ $(document).ready(function() {
             var collection = myFoursquareService.collection.venues;
             var dataTag = $(".venue_item_" + k).data("id");
             for (var i = 0; i < collection.length; i++) {
+                var popupContent = '<div class="venue_item venue_item_' + (i+1) + '" data-id="' + collection[i].id + '">' +  collection[i].name + '<br>' + collection[i].address + '<br><a href="#" class="pin_click">Add to Map</a></div>';
                 //Create a class for our red markers
                 var venue_circle = new L.divIcon({
                     className: 'venue-circle',
@@ -214,15 +215,15 @@ $(document).ready(function() {
                     if (page === undefined){
                         //For the first 10 enteries on first click we need this if statement otherwise nothing will appear
                         if( i < 10){
-                            venueLayer.addLayer(new L.Marker(LatLngCoord, {icon: venue_circle}));
+                            venueLayer.addLayer(new L.Marker(LatLngCoord, {icon: venue_circle}).bindPopup(popupContent).openPopup());
                         } else if ( i > 10){
-                            venueLayer.addLayer(new L.Circle(new L.LatLng(collection[i].lat,collection[i].lng), 15, {color: "blue"}));
+                            venueLayer.addLayer(new L.Circle(new L.LatLng(collection[i].lat,collection[i].lng), 15, {color: "blue"}).bindPopup(popupContent).openPopup());
                         }
                         //Otherwise cycle through venues that are or are not visible of the sidebar.
                     } else if (($(".venue_item_" + k).is(":visible")) && (page > 0)){
-                         venueLayer.addLayer(new L.Marker(LatLngCoord, {icon: venue_circle}));
+                         venueLayer.addLayer(new L.Marker(LatLngCoord, {icon: venue_circle}).bindPopup(popupContent).openPopup());
                 } else {
-                 venueLayer.addLayer(new L.Circle(new L.LatLng(collection[i].lat,collection[i].lng), 15, {color: "blue"}));
+                 venueLayer.addLayer(new L.Circle(new L.LatLng(collection[i].lat,collection[i].lng), 15, {color: "blue"}).bindPopup(popupContent).openPopup());
                     }; 
                 };
             };
@@ -230,5 +231,6 @@ $(document).ready(function() {
     }
 
     $(".sidebar").on("click", ".pin_click", pin_populate);
+    $("#themap").on("click", ".pin_click", pin_populate);
 
 });
