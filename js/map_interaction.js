@@ -28,6 +28,7 @@ $(document).ready(function() {
 
         markerLayer.clearLayers();
         venueLayer.clearLayers();
+        pinLayer.clearLayers();
 
         markerLayer.addLayer(new L.Marker(new L.LatLng(e.latlng.lat,e.latlng.lng), 
                 { icon: new L.Icon({ iconUrl: 'https://dev.mapkin.co/static/images/RouteMarkerEnd.png'}),
@@ -185,9 +186,11 @@ $(document).ready(function() {
        var dataTag = $(this).parent().data("id");
        for (var i = 0; i < collection.length; i++) {
             if (collection[i].id === dataTag){
+                //Center the map on the venue that you are adding to the map
                 leafletMap.setView((new L.LatLng(collection[i].lat,collection[i].lng)));
+                //Add new pin to the map
                 pinLayer.addLayer(new L.Marker(new L.LatLng(collection[i].lat,collection[i].lng), 
-                { icon: new L.Icon({ iconUrl: /*collection[i].icon*/'https://dev.mapkin.co/resources/poi/cat-icon-generic.24.24',     iconSize: [24, 24], iconAnchor: [12, 12]}),
+                { icon: new L.Icon({ iconUrl: 'https://dev.mapkin.co/resources/poi/cat-icon-generic.24.24',     iconSize: [24, 24], iconAnchor: [12, 12]}),
                       clickable: true,
                       draggable: false }));
                 //Change the data tag of pinned items so that the icons don't rewrite above it
@@ -205,7 +208,7 @@ $(document).ready(function() {
             var collection = myFoursquareService.collection.venues;
             var dataTag = $(".venue_item_" + k).data("id");
             for (var i = 0; i < collection.length; i++) {
-                var popupContent = '<div class="venue_item venue_item_' + (i+1) + '" data-id="' + collection[i].id + '">' +  collection[i].name + '<br>' + collection[i].address + '<br><a href="#" class="pin_click">Add to Map</a></div>';
+                var popupContent = '<img src="' + collection[i].icon + '"><div class="venue_item venue_item_' + (i+1) + '" data-id="' + collection[i].id + '">' +  collection[i].name + '<br>' + collection[i].address + '<br><a href="#" class="pin_click">Add to Map</a></div>';
                 //Create a class for our red markers
                 var venue_circle = new L.divIcon({
                     className: 'venue-circle',
